@@ -1,0 +1,7 @@
+Read a
+Read b
+LoadM a
+AddM b
+Store c
+Write c
+Halt
