@@ -21,7 +21,7 @@ public class Compiler {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter high-level source file (e.g., program.txt): ");
+        System.out.print("Enter high-level source file: ");
         String inputFile = sc.nextLine();
 
         Memory memory = new Memory();
@@ -61,32 +61,34 @@ public class Compiler {
             }
 
             // Write compiled program to file
-            writeMemoryToFile(memory, "compiled.txt");
-            System.out.println("\nCompilation successful! Output: compiled.txt");
-            memory.dump();
+            //writeMemoryToFile(memory, "compiled.txt");
+            //System.out.println("\nCompilation successful! Output: compiled.txt");
+            //memory.dump();
+            System.out.flush(); 
 
             System.out.print("\nRun the program now? (y/n): ");
             if (sc.nextLine().equalsIgnoreCase("y")) {
-                Loader.loadProgram("compiled.txt", memory);
+                //Loader.loadProgram("compiled.txt", memory);
                 Processor processor = new Processor(memory);
                 processor.run();
             }
 
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found - " + e.getMessage());
         }
 
         sc.close();
     }
 
-    private static List<String> readFile(String filename) throws IOException {
+    private static List<String> readFile(String filename) throws FileNotFoundException {
         List<String> lines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                lines.add(line.trim());
-            }
+        Scanner fileScanner = new Scanner(new File(filename));
+        
+        while (fileScanner.hasNextLine()) {
+            lines.add(fileScanner.nextLine().trim());
         }
+        
+        fileScanner.close();
         return lines;
     }
 
